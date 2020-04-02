@@ -1,0 +1,44 @@
+{
+  "name": "tilly",
+  "version": "0.0.1",
+  "description": "Promise Utility Library",
+  "author": "Sandro Lain",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html",
+    "build": "npx tsc",
+    "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
+    "build:docs": "npx typedoc --out ./typedocs ./src",
+    "serve:docs": "npm run build:docs && npx open-cli ./typedocs/index.html",
+    "prepare": "npx tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sandrolain/tilly.git"
+  },
+  "keywords": [
+    "promise",
+    "utility",
+    "library",
+    "async",
+    "await"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.8",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "^6.8.0",
+    "happy-dom": "^0.12.1",
+    "jest": "^25.2.4",
+    "light-server": "^2.6.4",
+    "open-cli": "^6.0.1",
+    "ts-jest": "^25.3.0",
+    "typedoc": "^0.17.3",
+    "typescript": "^3.8.3"
+  }
+}
