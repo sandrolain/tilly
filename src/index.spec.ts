@@ -105,7 +105,7 @@ describe("tilly", () => {
       (resolve: ResolveF): void => resolve(2),
       value => value + 1,
       value => value * 5,
-      value => value + 6
+      value => value + 1
     );
     expect(res).toEqual(16);
   });
@@ -116,7 +116,7 @@ describe("tilly", () => {
         (resolve: ResolveF): void => resolve(2),
         value => value + 1,
         value => value * 5,
-        value => value + 6
+        value => value + 1
       )
     );
     expect(res).toEqual({ success: true, payload: 16 });
