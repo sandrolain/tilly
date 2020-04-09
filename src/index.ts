@@ -11,6 +11,7 @@ export interface PromiseToResult<T> {
 
 
 /**
+ * Shortcut for Promise initialization.
  *
  * ```typescript
  * import { promise } from "tilly";
@@ -54,7 +55,7 @@ const promisesFromArgs = <T=any>(args: PromiseCreationArgument<T>[] | [PromiseCr
 
 
 /**
- * Shortcut for **Promise.resolve**.
+ * Shortcut for *Promise.resolve*.
  *
  * ```typescript
  * import { ok } from "tilly";
@@ -75,7 +76,7 @@ export function ok<T=any> (value: T): Promise<T> {
 
 
 /**
- * Shortcut for **Promise.reject**.
+ * Shortcut for *Promise.reject*.
  *
  * ```typescript
  * import { ko } "tilly";
@@ -97,7 +98,7 @@ export function ko (reason: Error | string): Promise<never> {
 
 
 /**
- * Shortcut for **Promise.all**, with the ability to pass the promises as single arguments.
+ * Shortcut for *Promise.all*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
  * import { all, ok } "tilly";
@@ -120,7 +121,7 @@ export function all<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T[]>
 
 
 /**
- * Shortcut for **Promise.race**, with the ability to pass the promises as single arguments.
+ * Shortcut for *Promise.race*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
  * import { race, ok } "tilly";
@@ -264,6 +265,26 @@ export function sleep<T=any> (time: number, data?: PromiseCreationArgument<T>): 
   });
 }
 
+/**
+ * This function delay the resolution of a promise.
+ * De facto is an alias of sleep() function with inverse not-optional arguments
+ *
+ * ```typescript
+ * import { delay } "tilly";
+ *
+ * const result = delay("wake up!", 3000);
+ *
+ * console.log(result);
+ * // "wake up!"
+ * ```
+ *
+ * @param data Promise, or executor function, or data value to pass to sleep() resolution after waiting time expires
+ * @param time The time to wait before Promise resolution, in milliseconds
+ */
+export function delay<T> (data: PromiseCreationArgument<T>, time: number): Promise<T> {
+  return sleep(time, data);
+}
+
 
 export type RetryExecutorFunction<T> = (resolve: ResolveFunction<T>, reject: RejectFunction, index: number, maxRetry: number) => void;
 
@@ -315,7 +336,28 @@ export async function retry<T=any> (maxRetry: number, executor: RetryExecutorFun
 }
 
 /**
- * Generate a function that invoke a generator paramter and return the same Promise until this reject or if is elapsed a specified time
+ * Generate a function that invoke a generator parameter and return the same Promise until this reject or if is elapsed a specified time
+ *
+ * ```typescript
+ * import { cache, ok, ko } "tilly";
+ *
+ * const getResolved = cache(() => ok("Result!"));
+ * const prom1 = getResolved();
+ * // wait Promise resolves/rejects…
+ * const prom2 = getResolved();
+ *
+ * console.log(prom1 === prom2);
+ * // true
+ *
+ * const getRejected = cache(() => ko("Error!"));
+ * const prom3 = getRejected();
+ * // wait Promise resolves/rejects…
+ * const prom4 = getRejected();
+ *
+ * console.log(prom3 === prom4);
+ * // false
+ * ```
+ *
  * @param generator The function that generate the promise to cache
  * @param timeout Optional, the expiration time of the promise in milliseconds
  */
