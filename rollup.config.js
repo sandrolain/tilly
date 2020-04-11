@@ -30,11 +30,6 @@ export default [
     },
     output: [
       {
-        dir: "./dist/cjs",
-        format: "cjs",
-        sourcemap: true
-      },
-      {
         dir: "./dist/esm",
         format: "esm",
         sourcemap: true
@@ -42,7 +37,7 @@ export default [
     ],
     plugins: [
       del({
-        targets: ["./dist/cjs/*", "./dist/esm/*"]
+        targets: ["./dist/esm/*"]
       }),
       typescript({
         typescript: require("typescript")
