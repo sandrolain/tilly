@@ -1,5 +1,5 @@
 import {
-  promise,
+  from,
   ok,
   ko,
   all,
@@ -20,7 +20,7 @@ type ResolveF = ResolveFunction<any>;
 describe("tilly", () => {
 
   test("promise", async () => {
-    const val = await promise((resolve: ResolveF): void => {
+    const val = await from((resolve: ResolveF): void => {
       resolve("test01");
     });
     expect(val).toEqual("test01");

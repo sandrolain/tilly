@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module tilly
+ */
+
 export type ResolveFunction<T> = (value?: T) => void;
 export type RejectFunction = (reason?: any) => void;
 export type ThenFunction<T=any, R=any> = (value?: T) => R;
@@ -16,7 +21,7 @@ export interface PromiseToResult<T> {
  * ```typescript
  * import { promise } from "tilly";
  *
- * const result = await promise((ok, ko) => {
+ * const result = await from((ok, ko) => {
  *   ok("Resolved!");
  * });
  *
@@ -26,11 +31,11 @@ export interface PromiseToResult<T> {
  *
  * @param data The Promise, or the executor function, or the value of resolved promise
  */
-export function promise<T=any> (data: PromiseCreationArgument<T>): Promise<T> {
+export function from<T=any> (data: PromiseCreationArgument<T>): Promise<T> {
   if(data instanceof Promise) {
     return data;
   }
-  if(typeof data == "function") {
+  if(typeof data === "function") {
     return new Promise<T>(data as ExecutorFunction<T>);
   }
   return Promise.resolve(data);
@@ -50,7 +55,7 @@ function arrayFromArgs<T> (args: T[] | [T[]]): T[] {
  * @ignore
  */
 const promisesFromArgs = <T=any>(args: PromiseCreationArgument<T>[] | [PromiseCreationArgument<T>[]]): Promise<T>[] => {
-  return arrayFromArgs<PromiseCreationArgument<T>>(args).map((value: T) => promise<T>(value));
+  return arrayFromArgs<PromiseCreationArgument<T>>(args).map((value: T) => from<T>(value));
 };
 
 
@@ -170,7 +175,7 @@ export function race<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T> 
  * @return Promise with managed result object
  */
 export async function to<T=any> (data: PromiseCreationArgument<T>): Promise<PromiseToResult<T>> {
-  return promise<T>(data)
+  return from<T>(data)
     .then(
       (payload: T): PromiseToResult<T> => ({ success: true, payload }),
       (error: Error): PromiseToResult<T> => ({ success: false, error })
@@ -200,12 +205,12 @@ export async function to<T=any> (data: PromiseCreationArgument<T>): Promise<Prom
  * // 7
  * ```
  *
- * @param from Function/Promise/mixed The Promise, or the executor function for the Promise, or value for the resolved promise
+ * @param start Function/Promise/mixed The Promise, or the executor function for the Promise, or value for the resolved promise
  * @param args Function Sequence of functions to pass as chain of then() method calls
  * @return Result Promise of the chain calls
  */
-export function chain<T=any, R=any> (from: PromiseCreationArgument<T>, ...chain: ThenFunction[]): Promise<R> {
-  let p = promise(from);
+export function chain<T=any, R=any> (start: PromiseCreationArgument<T>, ...chain: ThenFunction[]): Promise<R> {
+  let p = from(start);
   for(const fn of chain) {
     p = p.then(fn);
   }
@@ -260,7 +265,7 @@ export function every<T=any> (...proms: PromiseCreationArgument<T>[]): Promise<P
 export function sleep<T=any> (time: number, data?: PromiseCreationArgument<T>): Promise<T> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(promise(data));
+      resolve(from(data));
     }, time);
   });
 }
