@@ -1,6 +1,8 @@
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
 import { terser } from "rollup-plugin-terser";
+import del from "rollup-plugin-delete";
+
 
 export default [
   {
@@ -8,11 +10,14 @@ export default [
     output: {
       file: "dist/umd/index.js",
       format: "umd",
-      name: "fancyCase",
+      name: "tilly",
       esModule: false,
       sourcemap: true
     },
     plugins: [
+      del({
+        targets: ["./dist/umd/*"]
+      }),
       typescript({
         typescript: require("typescript")
       }),
@@ -36,6 +41,9 @@ export default [
       }
     ],
     plugins: [
+      del({
+        targets: ["./dist/cjs/*", "./dist/esm/*"]
+      }),
       typescript({
         typescript: require("typescript")
       }),

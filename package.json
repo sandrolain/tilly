@@ -1,9 +1,10 @@
 {
   "name": "tilly",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Promise Utility Library",
   "author": "Sandro Lain",
   "main": "dist/cjs/index.js",
+  "browser": "dist/umd/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/umd/index.d.ts",
   "files": [
@@ -12,15 +13,14 @@
     "dist/umd/*"
   ],
   "scripts": {
+    "build": "npx rollup -c",
+    "watch": "npx rollup -cw",
+    "prepare": "npm run build",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html",
-    "docs:build": "npx typedoc --plugin typedoc-plugin-no-inherit --out ./typedocs ./src",
-    "docs:serve": "npm run docs:build && npx open-cli ./typedocs/index.html",
-    "serve:demo": "npx run build && npx light-server -s . -p 5678 -o -w \"src/**/*.*, demo/*.* # npx run build\"",
-    "build": "npx rollup -c",
-    "watch": "npx rollup -cw",
-    "prepare": "npm run build"
+    "docs:build": "npx typedoc --out ./typedocs ./src",
+    "docs:serve": "npm run docs:build && npx open-cli ./typedocs/index.html"
   },
   "repository": {
     "type": "git",
@@ -43,9 +43,9 @@
     "eslint": "^6.8.0",
     "happy-dom": "^0.12.1",
     "jest": "^25.3.0",
-    "light-server": "^2.6.4",
     "open-cli": "^6.0.1",
-    "rollup": "^2.3.4",
+    "rollup": "^2.6.0",
+    "rollup-plugin-delete": "^1.2.0",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.0",
     "ts-jest": "^25.3.1",
