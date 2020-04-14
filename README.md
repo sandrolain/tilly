@@ -2,7 +2,7 @@
 
 <p align="center">
 
-![tilly](https://raw.githubusercontent.com/preactjs/preact/assets/logo.svg "tilly")
+![tilly](https://raw.githubusercontent.com/sandrolain/tilly/33ca7c6d7538c9d7f946d07aecac622c811b5f5e/assets/logo.svg "tilly")
 
 <br/>
 
