@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module tilly
+ */
+
 export type ResolveFunction<T> = (value?: T) => void;
 export type RejectFunction = (reason?: any) => void;
 export type ThenFunction<T=any, R=any> = (value?: T) => R;
@@ -11,11 +16,12 @@ export interface PromiseToResult<T> {
 
 
 /**
+ * Shortcut for Promise initialization.
  *
  * ```typescript
  * import { promise } from "tilly";
  *
- * const result = await promise((ok, ko) => {
+ * const result = await from((ok, ko) => {
  *   ok("Resolved!");
  * });
  *
@@ -25,11 +31,11 @@ export interface PromiseToResult<T> {
  *
  * @param data The Promise, or the executor function, or the value of resolved promise
  */
-export function promise<T=any> (data: PromiseCreationArgument<T>): Promise<T> {
+export function from<T=any> (data: PromiseCreationArgument<T>): Promise<T> {
   if(data instanceof Promise) {
     return data;
   }
-  if(typeof data == "function") {
+  if(typeof data === "function") {
     return new Promise<T>(data as ExecutorFunction<T>);
   }
   return Promise.resolve(data);
@@ -49,12 +55,12 @@ function arrayFromArgs<T> (args: T[] | [T[]]): T[] {
  * @ignore
  */
 const promisesFromArgs = <T=any>(args: PromiseCreationArgument<T>[] | [PromiseCreationArgument<T>[]]): Promise<T>[] => {
-  return arrayFromArgs<PromiseCreationArgument<T>>(args).map((value: T) => promise<T>(value));
+  return arrayFromArgs<PromiseCreationArgument<T>>(args).map((value: T) => from<T>(value));
 };
 
 
 /**
- * Shortcut for **Promise.resolve**.
+ * Shortcut for *Promise.resolve*.
  *
  * ```typescript
  * import { ok } from "tilly";
@@ -75,7 +81,7 @@ export function ok<T=any> (value: T): Promise<T> {
 
 
 /**
- * Shortcut for **Promise.reject**.
+ * Shortcut for *Promise.reject*.
  *
  * ```typescript
  * import { ko } "tilly";
@@ -97,7 +103,7 @@ export function ko (reason: Error | string): Promise<never> {
 
 
 /**
- * Shortcut for **Promise.all**, with the ability to pass the promises as single arguments.
+ * Shortcut for *Promise.all*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
  * import { all, ok } "tilly";
@@ -120,7 +126,7 @@ export function all<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T[]>
 
 
 /**
- * Shortcut for **Promise.race**, with the ability to pass the promises as single arguments.
+ * Shortcut for *Promise.race*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
  * import { race, ok } "tilly";
@@ -169,7 +175,7 @@ export function race<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T> 
  * @return Promise with managed result object
  */
 export async function to<T=any> (data: PromiseCreationArgument<T>): Promise<PromiseToResult<T>> {
-  return promise<T>(data)
+  return from<T>(data)
     .then(
       (payload: T): PromiseToResult<T> => ({ success: true, payload }),
       (error: Error): PromiseToResult<T> => ({ success: false, error })
@@ -199,12 +205,12 @@ export async function to<T=any> (data: PromiseCreationArgument<T>): Promise<Prom
  * // 7
  * ```
  *
- * @param from Function/Promise/mixed The Promise, or the executor function for the Promise, or value for the resolved promise
+ * @param start Function/Promise/mixed The Promise, or the executor function for the Promise, or value for the resolved promise
  * @param args Function Sequence of functions to pass as chain of then() method calls
  * @return Result Promise of the chain calls
  */
-export function chain<T=any, R=any> (from: PromiseCreationArgument<T>, ...chain: ThenFunction[]): Promise<R> {
-  let p = promise(from);
+export function chain<T=any, R=any> (start: PromiseCreationArgument<T>, ...chain: ThenFunction[]): Promise<R> {
+  let p = from(start);
   for(const fn of chain) {
     p = p.then(fn);
   }
@@ -259,9 +265,29 @@ export function every<T=any> (...proms: PromiseCreationArgument<T>[]): Promise<P
 export function sleep<T=any> (time: number, data?: PromiseCreationArgument<T>): Promise<T> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(promise(data));
+      resolve(from(data));
     }, time);
   });
+}
+
+/**
+ * This function delay the resolution of a promise.
+ * De facto is an alias of sleep() function with inverse not-optional arguments
+ *
+ * ```typescript
+ * import { delay } "tilly";
+ *
+ * const result = delay("wake up!", 3000);
+ *
+ * console.log(result);
+ * // "wake up!"
+ * ```
+ *
+ * @param data Promise, or executor function, or data value to pass to sleep() resolution after waiting time expires
+ * @param time The time to wait before Promise resolution, in milliseconds
+ */
+export function delay<T> (data: PromiseCreationArgument<T>, time: number): Promise<T> {
+  return sleep(time, data);
 }
 
 
@@ -315,7 +341,28 @@ export async function retry<T=any> (maxRetry: number, executor: RetryExecutorFun
 }
 
 /**
- * Generate a function that invoke a generator paramter and return the same Promise until this reject or if is elapsed a specified time
+ * Generate a function that invoke a generator parameter and return the same Promise until this reject or if is elapsed a specified time
+ *
+ * ```typescript
+ * import { cache, ok, ko } "tilly";
+ *
+ * const getResolved = cache(() => ok("Result!"));
+ * const prom1 = getResolved();
+ * // wait Promise resolves/rejects…
+ * const prom2 = getResolved();
+ *
+ * console.log(prom1 === prom2);
+ * // true
+ *
+ * const getRejected = cache(() => ko("Error!"));
+ * const prom3 = getRejected();
+ * // wait Promise resolves/rejects…
+ * const prom4 = getRejected();
+ *
+ * console.log(prom3 === prom4);
+ * // false
+ * ```
+ *
  * @param generator The function that generate the promise to cache
  * @param timeout Optional, the expiration time of the promise in milliseconds
  */

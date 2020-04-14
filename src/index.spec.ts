@@ -1,5 +1,5 @@
 import {
-  promise,
+  from,
   ok,
   ko,
   all,
@@ -8,7 +8,9 @@ import {
   chain,
   every,
   sleep,
+  delay,
   retry,
+  cache,
   ResolveFunction
 } from "./index";
 
@@ -18,7 +20,7 @@ type ResolveF = ResolveFunction<any>;
 describe("tilly", () => {
 
   test("promise", async () => {
-    const val = await promise((resolve: ResolveF): void => {
+    const val = await from((resolve: ResolveF): void => {
       resolve("test01");
     });
     expect(val).toEqual("test01");
@@ -142,6 +144,11 @@ describe("tilly", () => {
     expect(val).toEqual("wake up!");
   });
 
+  test("delay", async () => {
+    const val = await delay("wake up!", 2000);
+    expect(val).toEqual("wake up!");
+  });
+
   test("retry", async () => {
     const val = await retry(3, (resolve, reject, i, n) => {
       if(i === n) {
@@ -151,6 +158,24 @@ describe("tilly", () => {
       }
     });
     expect(val).toEqual("At the last attempt");
+  });
+
+  test("cache", async () => {
+    const getResolved = cache(() => ok(`Result ${Math.random()}!`));
+    const prom1 = getResolved();
+    // wait Promise resolves/rejects
+    await sleep(100);
+    const prom2 = getResolved();
+
+    expect(prom1).toBe(prom2);
+
+    const getRejected = cache(() => ko(`Error ${Math.random()}!`));
+    const prom3 = getRejected();
+    // wait Promise resolves/rejects
+    await sleep(100);
+    const prom4 = getRejected();
+
+    expect(prom3).not.toBe(prom4);
   });
 
 });
