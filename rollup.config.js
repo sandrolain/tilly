@@ -3,7 +3,6 @@ import typescript from "rollup-plugin-typescript2";
 import { terser } from "rollup-plugin-terser";
 import del from "rollup-plugin-delete";
 
-
 export default [
   {
     input: "src/index.ts",
@@ -21,7 +20,11 @@ export default [
       typescript({
         typescript: require("typescript")
       }),
-      terser()
+      terser({
+        output: {
+          comments: false
+        }
+      })
     ]
   },
   {
@@ -42,7 +45,12 @@ export default [
       typescript({
         typescript: require("typescript")
       }),
-      resolve()
+      resolve(),
+      terser({
+        output: {
+          comments: false
+        }
+      })
     ]
   }
 ];
