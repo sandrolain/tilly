@@ -11,9 +11,9 @@ This library is the evolution and conversion to TypeScript of [till.mjs](https:/
 
 ---
 
-# Getting Started
+## Getting Started
 
-*W.I.P.*
+Documentation with examples can be found [clicking here](https://sandrolain.github.io/tilly/typedocs/modules/_index_.html)
 
 ---
 
