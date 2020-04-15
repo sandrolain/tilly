@@ -8,7 +8,6 @@
     "after:bump": [
       "npm run build",
       "npm run docs:build",
-      "rm ./*.tgz",
       "npm pack"
     ],
     "after:release": [
