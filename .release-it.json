@@ -1,8 +1,19 @@
 {
   "hooks": {
-    "before:init": ["npm run test"],
-    "after:bump": ["npm run build", "npm run docs:build"],
-    "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+    "before:init": [
+      "git checkout master",
+      "git merge develop",
+      "npm run test"
+    ],
+    "after:bump": [
+      "npm run build",
+      "npm run docs:build"
+    ],
+    "after:release": [
+      "echo Successfully released ${name} v${version} to ${repo.repository}.",
+      "git checkout develop",
+      "git merge master"
+    ]
   },
   "git": {
     "requireBranch": "master",
