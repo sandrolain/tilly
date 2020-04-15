@@ -7,7 +7,8 @@
     ],
     "after:bump": [
       "npm run build",
-      "npm run docs:build"
+      "npm run docs:build",
+      "npm pack"
     ],
     "after:release": [
       "echo Successfully released ${name} v${version} to ${repo.repository}.",
