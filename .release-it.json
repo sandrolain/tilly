@@ -8,13 +8,15 @@
     "after:bump": [
       "npm run build",
       "npm run docs:build",
+      "rm ./*.tgz",
       "npm pack"
     ],
     "after:release": [
       "echo Successfully released ${name} v${version} to ${repo.repository}.",
       "git checkout develop",
       "git merge master",
-      "git push"
+      "git push",
+      "rm ./*.tgz"
     ]
   },
   "git": {
@@ -43,7 +45,7 @@
     "preRelease": false,
     "draft": false,
     "tokenRef": "GITHUB_TOKEN",
-    "assets": ["./*-${version}.tgz"],
+    "assets": ["./*.tgz"],
     "host": null,
     "timeout": 0,
     "proxy": null,
