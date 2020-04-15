@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "before:init": ["npm run test"],
+    "after:bump": ["npm run build", "npm run docs:build"],
+    "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+  },
+  "git": {
+    "requireBranch": "master",
+    "commit": true,
+    "commitMessage": "Release ${version}",
+    "tag": true,
+    "tagAnnotation": "Release ${version}",
+    "push": true,
+    "beforeStartCommand": false,
+    "beforeStageCommand": false,
+    "afterReleaseCommand": false
+  },
+  "npm": {
+    "publish": true,
+    "publishPath": ".",
+    "tag": null,
+    "otp": null,
+    "ignoreVersion": false,
+    "skipChecks": false
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release ${version}",
+    "releaseNotes": null,
+    "preRelease": false,
+    "draft": false,
+    "tokenRef": "GITHUB_TOKEN",
+    "assets": ["dist/*.zip"],
+    "host": null,
+    "timeout": 0,
+    "proxy": null,
+    "skipChecks": false
+  }
+}

@@ -19,7 +19,7 @@
     "test:coverage": "jest --coverage",
     "test:coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html",
     "docs:build": "npx typedoc ./src",
-    "docs:serve": "npm run docs:build && npx open-cli ./typedocs/index.html"
+    "docs:serve": "npm run docs:build && npx open-cli ./docs/typedocs/index.html"
   },
   "repository": {
     "type": "git",
