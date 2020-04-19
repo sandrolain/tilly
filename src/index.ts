@@ -19,7 +19,7 @@ export interface PromiseToResult<T> {
  * Shortcut for Promise initialization.
  *
  * ```typescript
- * import { promise } from "tilly";
+ * import { from } from "tilly";
  *
  * const result = await from((ok, ko) => {
  *   ok("Resolved!");
@@ -219,7 +219,7 @@ export function chain<T=any, R=any> (start: PromiseCreationArgument<T>, ...chain
 
 
 /**
- * Similar to the "all" function but with the "to" function applied to each element.
+ * Similar to the "all" function but with the "to" function applied to each element.<br/>
  * This allows to obtain the result of each Promise, both in case of resolution and rejection.
  *
  * ```typescript
@@ -247,7 +247,7 @@ export function every<T=any> (...proms: PromiseCreationArgument<T>[]): Promise<P
 
 
 /**
- * This function in conjunction with the use of await allows pausing the execution of the current context.
+ * This function in conjunction with the use of await allows pausing the execution of the current context.<br/>
  * Without the use of await it allows you to perform a Promise with delay.
  *
  * ```typescript
@@ -271,7 +271,7 @@ export function sleep<T=any> (time: number, data?: PromiseCreationArgument<T>): 
 }
 
 /**
- * This function delay the resolution of a promise.
+ * This function delay the resolution of a promise.<br/>
  * De facto is an alias of sleep() function with inverse not-optional arguments
  *
  * ```typescript
@@ -366,7 +366,7 @@ export async function retry<T=any> (maxRetry: number, executor: RetryExecutorFun
  * @param generator The function that generate the promise to cache
  * @param timeout Optional, the expiration time of the promise in milliseconds
  */
-export function cache<T=any> (generator: () => Promise<T>, timeout: number = 0): (() => Promise<T>) {
+export function cache<T=any> (generator: () => Promise<T>, cacheTime: number = 0): (() => Promise<T>) {
   let prom: Promise<T>;
   let resetTO: any;
 
@@ -378,13 +378,13 @@ export function cache<T=any> (generator: () => Promise<T>, timeout: number = 0):
       });
     }
 
-    if(timeout > 0) {
+    if(cacheTime > 0) {
       if(resetTO) {
         clearTimeout(resetTO);
       }
       resetTO = setTimeout(() => {
         prom = null;
-      }, timeout);
+      }, cacheTime);
     }
 
     return prom;

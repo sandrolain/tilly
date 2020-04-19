@@ -12,3 +12,5 @@ Small collection of functions designed to help the manipulation of the **ES6 Pro
 ## Documentation
 
 Documentation with examples can be found [clicking here](./typedocs).
+
+The same examples are visible by [clicking here](./examples.html).

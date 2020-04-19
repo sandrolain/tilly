@@ -11,9 +11,85 @@ This library is the evolution and conversion to TypeScript of [till.mjs](https:/
 
 ---
 
-## Getting Started
+## Install
 
-Documentation with examples can be found [clicking here](https://sandrolain.github.io/tilly/typedocs/modules/_index_.html)
+### With [NPM](https://www.npmjs.com/)
+
+```sh
+$ npm install tilly
+```
+
+or as development dependency:
+
+```sh
+$ npm install --save-dev tilly
+```
+
+### With [YARN](https://yarnpkg.com/)
+
+```sh
+$ yarn add tilly
+```
+
+or as development dependency:
+
+```sh
+$ yarn add --dev tilly
+```
+
+### Release Download
+
+You can download and use the [latest release](https://github.com/sandrolain/tilly/releases) directly from the GitHub page.
+
+---
+
+## Usage
+
+### As TypeScript module
+
+```typescript
+/// import specific methods or classes
+import { all, sleep } from "tilly";
+// ...
+
+// or entire library
+import * as tilly from "tilly";
+// ...
+```
+
+### As browser EcmaScript module
+
+```html
+<script type="module">
+/// import specific methods or classes
+import { all, sleep } from "./tilly/esm/index.js";
+// ...
+
+// or entire library
+import * as tilly from "./tilly/esm/index.js";
+// ...
+</script>
+```
+
+### As commonjs/node.js module
+
+```javascript
+/// import specific methods or classes
+const { all, sleep } = require("tilly");
+// ...
+
+// or entire library
+const tilly = require("tilly");
+// ...
+```
+
+---
+
+## Documentation
+
+Typedoc documentation with examples can be found by [clicking here](https://sandrolain.github.io/tilly/typedocs/modules/_index_.html).
+
+The same examples are visible by [clicking here](https://sandrolain.github.io/tilly/examples.html).
 
 ---
 

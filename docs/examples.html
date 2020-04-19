@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>EXAMPLES</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="examples">EXAMPLES</h1>
+<h2 id="fromdata">from(data)</h2>
+<p>Shortcut for Promise initialization.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-keyword">from</span>(<span class="hljs-function">(<span class="hljs-params">ok, ko</span>) =&gt;</span> {
+  ok(<span class="hljs-string">"Resolved!"</span>);
+});
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "Resolved!"</span>
+</div></code></pre>
+<hr>
+<h2 id="okdata">ok(data)</h2>
+<p>Shortcut for <em>Promise.resolve</em>.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { ok } <span class="hljs-keyword">from</span> <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ok(<span class="hljs-string">"Resolved!"</span>);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "Resolved!"</span>
+</div></code></pre>
+<hr>
+<h2 id="koerror">ko(error)</h2>
+<p>Shortcut for <em>Promise.reject</em>.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { ko } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ko(<span class="hljs-string">"Something went wrong"</span>);
+<span class="hljs-comment">// Error("Something went wrong")</span>
+</div></code></pre>
+<hr>
+<h2 id="allpromise-promise">all(promise, promise, ...)</h2>
+<p>Shortcut for <em>Promise.all</em>, with the ability to pass the promises as single arguments.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { all, ok } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> all(
+  ok(<span class="hljs-string">"Result #1"</span>),
+  ok(<span class="hljs-string">"Result #2"</span>),
+  ok(<span class="hljs-string">"Result #3"</span>)
+);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// ["Result #1", "Result #2", "Result #3"]</span>
+</div></code></pre>
+<hr>
+<h2 id="racepromise-promise">race(promise, promise, ...)</h2>
+<p>Shortcut for <em>Promise.race</em>, with the ability to pass the promises as single arguments.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { race, ok } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> race(
+  <span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> { setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { resolve(<span class="hljs-string">"One"</span>); }, <span class="hljs-number">600</span>); },
+  (resolve) =&gt; { setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { resolve(<span class="hljs-string">"Two"</span>); }, <span class="hljs-number">200</span>); },
+  (resolve) =&gt; { setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { resolve(<span class="hljs-string">"Three"</span>); }, <span class="hljs-number">400</span>); },
+);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "Two"</span>
+</div></code></pre>
+<hr>
+<h2 id="topromise">to(promise)</h2>
+<p>Function that allows the safe use of await without the need for a try / catch. In case of rejection the error is captured and returned.<br/>
+The structure of the result of the function is an object with two properties: &quot;success&quot; true / false and depending on the case &quot;payload&quot; or &quot;error&quot; evaluated.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { to, ok, ko } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result1 = <span class="hljs-keyword">await</span> to(
+  ok(<span class="hljs-string">"Resolved!"</span>)
+);
+
+<span class="hljs-built_in">console</span>.log(result1);
+<span class="hljs-comment">// {"success": true, "payload": "Resolved!"}</span>
+
+<span class="hljs-keyword">const</span> result2 = <span class="hljs-keyword">await</span> to(
+  ko(<span class="hljs-string">"Something went wrong"</span>)
+);
+
+<span class="hljs-built_in">console</span>.log(result2);
+<span class="hljs-comment">// {"success": false, "error": Error("Something went wrong")}</span>
+</div></code></pre>
+<hr>
+<h2 id="chainpromise-then-then">chain(promise, then, then, ...)</h2>
+<p>Function that allows you to execute a promise followed by a sequence of transformations of the returned value through a chain of calls to the then() method.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { chain } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> chain(
+  <span class="hljs-function">(<span class="hljs-params">ok, ko</span>) =&gt;</span> {
+    ok(<span class="hljs-number">2</span>);
+  },
+  (value) =&gt; {
+    <span class="hljs-keyword">return</span> value * <span class="hljs-number">2</span>;
+  },
+  (value) =&gt; {
+    <span class="hljs-keyword">return</span> value + <span class="hljs-number">3</span>;
+  }
+);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// 7</span>
+</div></code></pre>
+<hr>
+<h2 id="everypromise-promise">every(promise, promise, ...)</h2>
+<p>Similar to the &quot;all&quot; function but with the &quot;to&quot; function applied to each element.<br/>
+This allows to obtain the result of each Promise, both in case of resolution and rejection.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { every, ok, ko } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> every(
+  ok(<span class="hljs-string">"Result #1"</span>),
+  ko(<span class="hljs-string">"Error #2"</span>),
+  ok(<span class="hljs-string">"Result #3"</span>)
+);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// [{"success": true, "payload": "Result #1"},</span>
+<span class="hljs-comment">//  {"success": false, "error": Error("Error #2")},</span>
+<span class="hljs-comment">//  {"success": true, "payload": "Result #3"}]</span>
+
+</div></code></pre>
+<hr>
+<h2 id="sleeptime-promise">sleep(time, promise)</h2>
+<p>This function in conjunction with the use of await allows pausing the execution of the current context.<br/>
+Without the use of await it allows you to perform a Promise with delay.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { sleep } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> sleep(<span class="hljs-number">3000</span>, <span class="hljs-string">"wake up!"</span>);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "wake up!"</span>
+</div></code></pre>
+<hr>
+<h2 id="delaypromise-time">delay(promise, time)</h2>
+<p>This function delay the resolution of a promise.<br/>
+De facto is an alias of sleep() function with inverse not-optional arguments</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { delay } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = delay(<span class="hljs-string">"wake up!"</span>, <span class="hljs-number">3000</span>);
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "wake up!"</span>
+</div></code></pre>
+<hr>
+<h2 id="retrytimes-executor">retry(times, executor)</h2>
+<p>This function allows you to execute the call to Promise several times in the case of re-rejection, until there is a resolution or the attempts are exhausted.</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { retry } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> retry(<span class="hljs-number">3</span>, (resolve, reject, i, n) =&gt; {
+  <span class="hljs-keyword">if</span>(i == n) {
+    resolve(<span class="hljs-string">"At the last attempt"</span>);
+  } <span class="hljs-keyword">else</span> {
+    reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Failed attempt"</span>));
+  }
+});
+
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">// "At the last attempt"</span>
+</div></code></pre>
+<hr>
+<h2 id="cachepromisegenerator--cachetime">cache(promiseGenerator [, cacheTime])</h2>
+<p>Generate a function that invoke a generator parameter and return the same Promise until this reject or if is elapsed a specified time</p>
+<pre><code class="language-javascript"><div><span class="hljs-keyword">import</span> { cache, ok, ko } <span class="hljs-string">"tilly"</span>;
+
+<span class="hljs-keyword">const</span> getResolved = cache(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ok(<span class="hljs-string">"Result!"</span>));
+<span class="hljs-keyword">const</span> prom1 = getResolved();
+<span class="hljs-comment">// wait Promise resolves/rejects…</span>
+<span class="hljs-keyword">const</span> prom2 = getResolved();
+
+<span class="hljs-built_in">console</span>.log(prom1 === prom2);
+<span class="hljs-comment">// true</span>
+
+<span class="hljs-keyword">const</span> getRejected = cache(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ko(<span class="hljs-string">"Error!"</span>));
+<span class="hljs-keyword">const</span> prom3 = getRejected();
+<span class="hljs-comment">// wait Promise resolves/rejects…</span>
+<span class="hljs-keyword">const</span> prom4 = getRejected();
+
+<span class="hljs-built_in">console</span>.log(prom3 === prom4);
+<span class="hljs-comment">// false</span>
+</div></code></pre>
+
+    </body>
+    </html>
