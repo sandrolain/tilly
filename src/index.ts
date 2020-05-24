@@ -84,7 +84,7 @@ export function ok<T=any> (value: T): Promise<T> {
  * Shortcut for *Promise.reject*.
  *
  * ```typescript
- * import { ko } "tilly";
+ * import { ko } from "tilly";
  *
  * const result = await ko("Something went wrong");
  * // Error("Something went wrong")
@@ -106,7 +106,7 @@ export function ko (reason: Error | string): Promise<never> {
  * Shortcut for *Promise.all*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
- * import { all, ok } "tilly";
+ * import { all, ok } from "tilly";
  *
  * const result = await all(
  *   ok("Result #1"),
@@ -129,7 +129,7 @@ export function all<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T[]>
  * Shortcut for *Promise.race*, with the ability to pass the promises as single arguments.
  *
  * ```typescript
- * import { race, ok } "tilly";
+ * import { race, ok } from "tilly";
  *
  * const result = await race(
  *   (resolve) => { setTimeout(() => { resolve("One"); }, 600); },
@@ -154,7 +154,7 @@ export function race<T=any> (...args: PromiseCreationArgument<T>[]): Promise<T> 
  * The structure of the result of the function is an object with two properties: "success" true / false and depending on the case "payload" or "error" evaluated.
  *
  * ```typescript
- * import { to, ok, ko } "tilly";
+ * import { to, ok, ko } from "tilly";
  *
  * const result1 = await to(
  *   ok("Resolved!")
@@ -187,7 +187,7 @@ export async function to<T=any> (data: PromiseCreationArgument<T>): Promise<Prom
  * Function that allows you to execute a promise followed by a sequence of transformations of the returned value through a chain of calls to the then() method.
  *
  * ```typescript
- * import { chain } "tilly";
+ * import { chain } from "tilly";
  *
  * const result = await chain(
  *   (ok, ko) => {
@@ -223,7 +223,7 @@ export function chain<T=any, R=any> (start: PromiseCreationArgument<T>, ...chain
  * This allows to obtain the result of each Promise, both in case of resolution and rejection.
  *
  * ```typescript
- * import { every, ok, ko } "tilly";
+ * import { every, ok, ko } from "tilly";
  *
  * const result = await every(
  *   ok("Result #1"),
@@ -251,7 +251,7 @@ export function every<T=any> (...proms: PromiseCreationArgument<T>[]): Promise<P
  * Without the use of await it allows you to perform a Promise with delay.
  *
  * ```typescript
- * import { sleep } "tilly";
+ * import { sleep } from "tilly";
  *
  * const result = await sleep(3000, "wake up!");
  *
@@ -275,7 +275,7 @@ export function sleep<T=any> (time: number, data?: PromiseCreationArgument<T>): 
  * De facto is an alias of sleep() function with inverse not-optional arguments
  *
  * ```typescript
- * import { delay } "tilly";
+ * import { delay } from "tilly";
  *
  * const result = delay("wake up!", 3000);
  *
@@ -297,7 +297,7 @@ export type RetryExecutorFunction<T> = (resolve: ResolveFunction<T>, reject: Rej
  * This function allows you to execute the call to Promise several times in the case of re-rejection, until there is a resolution or the attempts are exhausted.
  *
  * ```typescript
- * import { retry } "tilly";
+ * import { retry } from "tilly";
  *
  * const result = await retry(3, (resolve, reject, i, n) => {
  *   if(i == n) {
@@ -344,7 +344,7 @@ export async function retry<T=any> (maxRetry: number, executor: RetryExecutorFun
  * Generate a function that invoke a generator parameter and return the same Promise until this reject or if is elapsed a specified time
  *
  * ```typescript
- * import { cache, ok, ko } "tilly";
+ * import { cache, ok, ko } from "tilly";
  *
  * const getResolved = cache(() => ok("Result!"));
  * const prom1 = getResolved();
